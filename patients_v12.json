@@ -1,0 +1,211 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "IHIS Patients Manager test",
+    "description": "This is a sample Patients API for IHIS",
+    "version": "1.0.0"
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  },
+  "servers": [
+    {
+      "url": "https://mrin/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "facilities",
+      "description": "Use this API to know about the patients information"
+    }
+  ],
+  "paths": {
+    "/patient/{patientid}": {
+      "get": {
+        "tags": [
+          "facilities"
+        ],
+        "summary": "get available facilities",
+        "description": "Use this API to know about the facilities available",
+        "operationId": "findFacilitiesByUEN",
+        "parameters": [
+          {
+            "name": "patientid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MessageId",
+            "in": "header",
+            "description": "Request Message ID header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "requestorId",
+            "in": "header",
+            "description": "Requester ID header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PatientInnerJSON": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string"
+          },
+          "NRIC": {
+            "type": "string"
+          },
+          "Birthdate": {
+            "type": "string"
+          },
+          "Address": {
+            "type": "string"
+          },
+          "PhoneNum": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ResponseHeaderInnerJSON": {
+        "type": "object",
+        "properties": {
+          "MessageId": {
+            "type": "string"
+          },
+          "Timestamp": {
+            "type": "string"
+          },
+          "requestorId": {
+            "type": "string"
+          }
+        }
+      },
+      "PatientsResponse": {
+        "type": "object",
+        "properties": {
+          "responseHeader": {
+            "$ref": "#/components/schemas/ResponseHeaderInnerJSON"
+          },
+          "patient": {
+            "$ref": "#/components/schemas/PatientInnerJSON"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "api_key",
+        "in": "header"
+      },
+      "oauth2": {
+        "type": "oauth2",
+        "flows": {
+          "password": {
+            "tokenUrl": "https://ihis.com/token",
+            "scopes": {}
+          }
+        }
+      }
+    }
+  }
+}
